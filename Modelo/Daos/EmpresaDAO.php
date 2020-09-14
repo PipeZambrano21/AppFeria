@@ -2,7 +2,7 @@
 
 include_once($_SERVER['DOCUMENT_ROOT'] . '/ProyectoFeria/AppFeria/Modelo/Entidades/Empresa.php');
 include_once($_SERVER['DOCUMENT_ROOT'] . '/ProyectoFeria/AppFeria/Conexion/db.php');
-
+include_once($_SERVER['DOCUMENT_ROOT'] . '/ProyectoFeria/AppFeria/Controlador/EnviarCorreos.php');
 
 /**
  * Representa el DAO de la clase Usuario
@@ -21,7 +21,14 @@ class EmpresaDAO extends DB
 
 
 
-
+    public function darBlobcc($variable){
+        $sentencia = $this->con->prepare("SELECT * FROM empresa WHERE COD_EMPRESA=?");
+        $sentencia->execute([$variable]);
+        $empresa=$sentencia->fetchAll();
+        return $empresa;
+        
+        
+    }
 
     // Lista de empresas con el usuario activo
     public function vistaEmpresas()
@@ -44,6 +51,47 @@ class EmpresaDAO extends DB
         return $nrows;
     }
 
+    public function registrarEmpresaProcedimiento($v){
+    /* ni_empresa ,nombre ,ccmpdf ,descripccion,logo,telefono,correo ,nomc,apellc ,telc,cargoc,correoc ,userempresa , passw ) 
+    */
+    $classEnviar= new enviarCorreo();
+    $codigo=intval(rand(0,9).rand(0,9).rand(0,9).rand(0,9));
+    $mensaje='Muchas gracias por registrarse en la aplicación de "Feria de Oportunidades Universidad El Bosque", para continar con el proceso de inscripcción, por favor ingrese a la aplicación con su correo electronico, 
+    la contaseña será el nit de la empresa, para su primer ingreso, debera ingresar el codigo de verificacion que esta a continuación :  '.$codigo. " podrás acceder a toda la funciones 
+    hasta que la Universidad El Bosque, confirme su registro. 
+     Muchas Gracias";
+    $md5Codigo=md5($codigo);
+    $sentencia = $this->con->prepare("CALL agregar_Empresa(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $r=$sentencia->execute([$v[0],$v[1],$v[2],$v[3],$v[4],$v[5],$v[6],$v[7],$v[8],$v[9],$v[10],$v[11],$v[12],$v[13],$md5Codigo]);  
+    if($r==1){
+        #$nombre,$para,$asunto,$mensaje
+        $r1=$classEnviar->enviarMensaje($v[1],$v[6],'Registro Plataforma Oportunidades El Bosque',$mensaje);
+        if($r1==0){
+            $sentencia2 = $this->con->prepare("call borrar_registro_empresa(?)");
+             $sentencia2->execute([$v[6]]);
+            return "Hubo un error en nuestro servidor de Correo electrónico por el momento no podemos procesar tu solicitud, intentalo mas tarde";
+        }else{
+            return 1;            
+        }
+
+    }else{
+        return "Hubo un error con el registro, por favor vuelva a interlo en unos minutos.  ";
+    }
+
+    }
+
+    public function editarEmpresa($codigo,$nombre,$telefono,$descripcion,$imagen)
+    {       
+        $sentencia = $this->con->prepare("UPDATE empresa SET 
+        RAZON_SOCIAL=?,
+        TELEFONO_EMPRESA=?,
+        DESCRIPCCION_EMPRESA=?,
+        LOGO_EMPRESA=?
+        WHERE COD_EMPRESA =?");
+
+        $res=$sentencia->execute([$nombre,$telefono,$descripcion,$imagen,$codigo]);
+        return $res;
+    }
 
 
     public function buscarEmpresaxNit($variable)
@@ -64,6 +112,19 @@ class EmpresaDAO extends DB
             $em[] = $fila;
         }
         return $em;
+    }
+
+    // public function registrarMotivo($cod,$mensaje){
+    // $sentencia=$this->con->prepare("UPDATE promocion_postulacion set COD_MOTIVO_RECHAZO=?,motivo_resultado=? WHERE COD_PROMOCION_POSTULACION=?"); 
+    // $respuesta=  $sentencia->execute([$cod, $mensaje]);
+    // return $respuesta;
+    // }
+
+    public function agregarNoti($cod_Desde, $codPara,$mensaje){
+        $sentencia=$this->con->prepare("INSERT INTO NOTIFICACION ( NOTIFACION_DESDE, NOTIFACION_PARA, PROMOCION_PERFIL, MENSAJE_NOTIFICACION, FECHA_ENVIO) 
+        VALUES (?,?,null,?,now())"); 
+        $respuesta=  $sentencia->execute([$cod_Desde,$codPara,$mensaje]);
+        return $respuesta;
     }
 
 

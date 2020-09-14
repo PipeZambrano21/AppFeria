@@ -75,8 +75,6 @@ include('menuEstudiante.php')
                                     <tr>
                                         <th>Nombre empresa</th>
                                         <th>Titulo Oferta</th>
-                                        <th>Telefono empresa</th>
-                                        <th>Telefono contacto</th>
                                         <th>Correo contacto</th>
                                         <th>Compensación</th>
                                         <th>Estado</th>
@@ -92,12 +90,10 @@ include('menuEstudiante.php')
                                         echo ("<tr>");
                                         echo ("<td>" . $key[0] . "</td>");
                                         echo ("<td>" . $key[1] . "</td>");
-                                        echo ("<td>" . $key[3] . "</td>");
-                                        echo ("<td>" . $key[5] . "</td>");
                                         echo ("<td>" . $key[4] . "</td>");
-                                        echo ("<td>" . $key[2] . "</td>");
+                                        echo ("<td>" . $key[9] . "</td>");
                                         echo ("<td><span class='mb-2 mr-2 badge badge-success'>" . $key[7] . "</span></td>");
-                                        echo ("<td><button type='submit' class='mb-1 btn btn-danger' id='boton1'"."onclick='mostrarModal(".'"'.$key[8].'"'.")'". ">Motivo</button></td>");
+                                        echo ("<td><button type='submit' class='mb-1 btn btn-danger' id='boton1'"."onclick='mostrarModal(".'"'.$key[10].'",'.'"'.$key[8].'"'.")'". ">Motivo</button></td>");
 
 
                                     ?>
@@ -131,6 +127,11 @@ include('menuEstudiante.php')
                         <div class="form-group">
                             <label for="exampleInputEmail1">Motivo de la decisión: </label>
                             <label  class="form-control" name="motivo" value="" id="motivoLista"></label>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Descripción: </label>
+                            <textarea  class="form-control" style="resize:none;" rows="6"  readonly="true" id="des"></textarea>
                         </div>
 
                     </form> 
@@ -172,9 +173,11 @@ include('menuEstudiante.php')
     </script>
 
 <script>
-    function mostrarModal(valor) {
+    function mostrarModal(valor, des) {
         $('#exampleModalForm').modal('show'); 
         elemento=document.getElementById("motivoLista").innerHTML=valor ;
+        elemento=document.getElementById("des").innerHTML=des ;
+
     }
 </script>
 

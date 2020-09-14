@@ -23,13 +23,29 @@ class ControladorEmpresa{
 			return $this->empresas->validar($COD);
 		}
 
-		public function actualizarEmpresa(Empresa $empresa){
+		public function actualizarEmpresa($codigo,$nombre,$telefono,$descripcion,$imagen){
 			$empresa_DAO=new EmpresaDAO();
-			$resultado_empresa=$empresa_DAO->editarPerfil($empresa);
+			$resultado_empresa=$empresa_DAO->editarEmpresa($codigo,$nombre,$telefono,$descripcion,$imagen);
+			print_r($resultado_empresa);
+			return $resultado_empresa;
+			
+		}
+
+		public function darBlobCamara($cod){
+			$empresa_DAO=new EmpresaDAO();
+			$resultado_empresa=$empresa_DAO->darBlobcc($cod);
 			return $resultado_empresa;
 		}
 
-	
+		public function editarNotificacion($cod_desde,$cod,$mensaje){
+			$this->empresas = new EmpresaDAO();
+			return $this->empresas->agregarNoti($cod_desde,$cod, $mensaje);
+		}
+
+		// public function registrarMotivo($cod,$mensaje){
+		// 	$this->empresas = new EmpresaDAO();
+		// 	return $this->empresas->agregarNoti($cod, $mensaje);
+		// }
 
 	
 	}

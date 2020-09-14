@@ -34,7 +34,7 @@ class PromocionLaboralDAO
         return $em;
     }
     public function vistaPromocionLaboral(){
-        $sentencia = $this->con->prepare("SELECT * FROM promocion_laboral");
+        $sentencia = $this->con->prepare("SELECT * FROM promocion_laboral WHERE promocion_estado = 1");
         $sentencia->execute();
         $em = array();
          while ($fila = $sentencia->fetch()) {
@@ -46,21 +46,18 @@ class PromocionLaboralDAO
         $sentencia = $this->con->prepare("SELECT * FROM promocion_laboral2 WHERE cod_promocion_laboral =" .$pCodigoPromocion);
         $sentencia->execute();
         $row = $sentencia->fetch();
-<<<<<<< Updated upstream
-        $promocion = new PromocionLaboral($row[0], $row[1],$row[2], 
+/*         $promocion = new PromocionLaboral($row[0], $row[1],$row[2], 
         $row[3],$row[4], $row[5], $row[6], 
         $row[7],$row[8], $row[9], $row[10],$row[11], 
         $row[12],$row[13],$row[14],$row[15]);
 
         return $promocion;
-=======
         $em = array();
         while ($fila = $sentencia->fetch()) {
            $em[] = $fila;  
-       }
-       return $em;
-        
->>>>>>> Stashed changes
+       }*/
+       return $row;
+
     }
 
 
@@ -87,8 +84,44 @@ class PromocionLaboralDAO
         return $em;
     }
 
+    public function verOfertas3($pCodigo,$base,$cantidad){
+        $sentencia = $this->con->prepare("SELECT * FROM  listar_promociones_disponibilidad WHERE promocion_estado=1 and cod_empresa =? and disponible>0 LIMIT ?, ?"); 
+        $sentencia->execute([$pCodigo,$base,$cantidad]);
+        $em = array();
+         while ($fila = $sentencia->fetch()) {
+            $em[] = $fila;  
+        }
+        return $em;
+    }
+    public function vistaPromocionLaboral2($base,$cantidad){
+        $sentencia = $this->con->prepare("SELECT * FROM  listar_promociones_disponibilidad WHERE promocion_estado=1  and disponible>0 LIMIT ?, ?"); 
+        $sentencia->execute([$base,$cantidad]);
+        $em = array();
+         while ($fila = $sentencia->fetch()) {
+            $em[] = $fila;
+        }
+        return $em;
+    }
 
-    
+    public function cantidadOfertas3($cod){
+        $sentencia = $this->con->prepare("SELECT * FROM  listar_promociones_disponibilidad WHERE promocion_estado=1 and cod_empresa =? and disponible>0"); 
+        $sentencia->execute([$cod]);
+        $em = array();
+         while ($fila = $sentencia->fetch()) {
+            $em[] = $fila;  
+        }
+        return count($em);
+    }
+
+    public function cantidadOfertas4(){
+        $sentencia = $this->con->prepare("SELECT * FROM  listar_promociones_disponibilidad WHERE promocion_estado=1  and disponible>0"); 
+        $sentencia->execute();
+        $em = array();
+         while ($fila = $sentencia->fetch()) {
+            $em[] = $fila;  
+        }
+        return count($em);
+    }
 
 
     public function ofertasActivasEinactivas($pCodigo){

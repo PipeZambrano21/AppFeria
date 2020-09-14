@@ -1,10 +1,10 @@
 <?php
+include_once($_SERVER['DOCUMENT_ROOT'].'/ProyectoFeria/AppFeria/Modelo/Entidades/ExperienciaHoja.php');
+require_once ( $_SERVER['DOCUMENT_ROOT'] . '/ProyectoFeria/AppFeria/Conexion/db.php');
 
-require_once('../Entidades/ExperienciaHoja.php');
-require_once('../conexion/db.php');
 
 /**
- * Representa el DAO de la clase Usuario
+ * Representa el DAO de la clase Experiencia
  */
 class ExperienciaHojaDAO
 {
@@ -20,20 +20,73 @@ class ExperienciaHojaDAO
     
     public function crearExperienciaHoja(ExperienciaHoja $nueva)
     {   
-        $sql = "INSERT INTO EXPERIENCIA_HOJA VALUES (default ,'" . $nueva->getCodHojaVida() . "','" . $nueva->getExperienciaCargo() . "','" . $nueva->getExperienciaEmpresa() . "','" . $nueva->getExperienciaDesde() . "','" . $nueva->getExperienciaHasta() . "','" . $nueva->getExperienciaDescripcion()."')";
-        $result =mysqli_query($this->con, $sql);
-        return mysqli_fetch_all($result);
+    
+        
+            $sql="INSERT into EXPERIENCIA_HOJA (COD_HOJA_VIDA,
+            EXPERIENCIA_HOJA_CARGO,
+            EXPERIENCIA_HOJA_EMPRESA,
+            EXPERIENCIA_HOJA_DESDE,
+            EXPERIENCIA_HOJA_HASTA,
+            EXPERIENCIA_HOJA_DESCRIPCCION)
+            values 
+            (?,?,?,?,?,?)";
+            $respuesta=$this->con->prepare($sql)->execute([$nueva->getCodHojaVida(),$nueva->getExperienciaCargo(),
+            $nueva->getExperienciaEmpresa(), $nueva->getExperienciaDesde(),$nueva->getExperienciaHasta(),
+            $nueva->getExperienciaDescripcion()]);
+            
+            return $respuesta;
+    
+        
+    
 
     }
 
-    public function ModificarExperiencia($cod_experiencia, $cargo, $empresa, $desde, $hasta, $descripcion){
-        $sql = "UPDATE EXPERIENCIA_HOJA SET EXPERIENCIA_HOJA_CARGO='".$cargo."' and eXPERIENCIA_HOJA_EMPRESA='".$empresa."' 
-        AND EXPERIENCIA_HOJA_DESDE='".$desde."' and EXPERIENCIA_HOJA_HASTA='".$hasta."' and EXPERIENCIA_HOJA_descripcion='".$descripcion."' 
-        WHERE cod_experiencia_hoja= $cod_experiencia";
-        $result =pg_query($this->con, $sql);
-        return pg_fetch_all($result);
+    // public function ModificarExperiencia($cod_experiencia, $cargo, $empresa, $desde, $hasta, $descripcion){
+    //     $sql = "UPDATE EXPERIENCIA_HOJA SET EXPERIENCIA_HOJA_CARGO='".$cargo."' and EXPERIENCIA_HOJA_EMPRESA='".$empresa."' 
+    //     AND EXPERIENCIA_HOJA_DESDE='".$desde."' and EXPERIENCIA_HOJA_HASTA='".$hasta."' and EXPERIENCIA_HOJA_descripcion='".$descripcion."' 
+    //     WHERE cod_experiencia_hoja= $cod_experiencia";
+    //     $respuesta = $this->con->prepare($sql)->execute();
+    //     return $respuesta;
+    // }
+
+    public function editarExperienciaHoja(ExperienciaHoja $experiencia)
+    {   
+    
+        
+            $sql="UPDATE EXPERIENCIA_HOJA SET (
+            EXPERIENCIA_HOJA_CARGO,
+            EXPERIENCIA_HOJA_EMPRESA,
+            EXPERIENCIA_HOJA_DESDE,
+            EXPERIENCIA_HOJA_HASTA,
+            EXPERIENCIA_HOJA_DESCRIPCCION)
+            values 
+            (?,?,?,?,?)";
+            $respuesta=$this->con->prepare($sql)->execute([$experiencia->getExperienciaCargo(),
+            $experiencia->getExperienciaEmpresa(), $experiencia->getExperienciaDesde(),$experiencia->getExperienciaHasta(),
+            $experiencia->getExperienciaDescripcion()]);
+            
+            return $respuesta;
+    
+
+
     }
 
+    public function darExperienciaXHoja($cod){
+        $sentencia = $this->con->prepare("SELECT * FROM EXPERIENCIA_HOJA WHERE COD_HOJA_VIDA=" . $cod);
+        $sentencia->execute();
+        while ($fila = $sentencia->fetch()) {
+            $experiencia = new ExperienciaHoja(
+                $fila[0],
+                $fila[1],
+                $fila[2],
+                $fila[3],
+                $fila[4],
+                $fila[5],
+                $fila[6]
+            );
+        }
+        return $experiencia;
+    }
 
     
 

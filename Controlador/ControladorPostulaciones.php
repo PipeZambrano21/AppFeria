@@ -45,11 +45,15 @@ class ControladorPostulacion{
 			return $this->postulados->cambiarEstado($cod,$estado);
 		}
 
-		public function registrarMotivo($cod,$motivo){
+		public function registrarMotivo($cod,$motivo, $des){
 			$this->postulados = new PromocionPostulacionDAO();
-			return $this->postulados->editarMotivo($cod,$motivo);
+			return $this->postulados->editarMotivo($cod,$motivo, $des);
 		}
 		
+		public function practicantesXe($cod){
+			$this->postulados = new PromocionPostulacionDAO();
+			return $this->postulados->practicantesXempresa($cod);
+		}
 	
 	}
 

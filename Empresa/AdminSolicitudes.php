@@ -54,8 +54,8 @@ include('menuEmpresa.php')
                     </li>
                     <li class="breadcrumb-item" aria-current="page">Administrar solicitudes</li>
                 </ol>
-            </nav>
-
+            </nav> 
+                   
         </div>
 
         <div class="row">
@@ -89,8 +89,8 @@ include('menuEmpresa.php')
                                         echo ("<td>" . $key[2] . "</td>");
                                         echo ("<td>" . $key[3] . "</td>");
                                         echo ("<td><span class='mb-2 mr-2 badge badge-success'>" . $key[4] . "</span></td>");
-                                        echo ("<td> <button type='button' class='mb-1 btn btn-primary'>
-                                                 <i class='mdi mdi-star-outline mr-1'></i>Hoja de vida</button></td>");
+                                        echo ("<td> <button type='button' class='mb-1 btn btn-success' onclick='abrirPDF()'>Hoja de Vida</button>
+                                        </td>");
 
 
                                         if ($key["COD_ESTADO_PROCESO"] == "1") {
@@ -137,17 +137,30 @@ include('menuEmpresa.php')
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalFormTitle">Registrar</h5>
+                    <h5 class="modal-title" id="exampleModalFormTitle">Registrar Motivo</h5>
 
                 </div>
                 <div class="modal-body">
                     <form method="POST" id='formAgregarOf'>
+
+                        <div class="form-group">
+                            <label for="exampleFormControlSelect1">Motivo</label>
+                            <select class="form-control" id="select" name="select">
+                                <option value="1">No cumple con el perfil</option>
+                                <option value="2">Hoja de vida erronea</option>
+                                <option value="3">Datos incorrectos</option>
+                                <option value="4">Errores en la entrevista</option>
+                                <option value="5">Otro</option>
+                            </select> </div>
+
                         <div class="form-group">
                             <label for="exampleInputEmail1">Motivo de la decisión: </label>
-                            <input type="text" class="form-control" name="motivo" id="motivo" aria-describedby="emailHelp">
+                            <textarea type="text" class="form-control" name="motivo" id="motivo" aria-describedby="emailHelp"></textarea>
                         </div>
+
+
                         <input type="hidden" id="escondido">
-                        
+
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -179,14 +192,15 @@ include('menuEmpresa.php')
         });
     </script>
 
-<script>
-    var variableCod;
-    function mostrarModal1(valor) {
-        $('#exampleModalForm').modal('show'); 
-        variableCod = valor;    
-     
-    }
-</script>
+    <script>
+        var variableCod;
+
+        function mostrarModal1(valor) {
+            $('#exampleModalForm').modal('show');
+            variableCod = valor;
+
+        }
+    </script>
 
 
 
@@ -231,3 +245,12 @@ include('menuEmpresa.php')
     include('Footer.php')
 
     ?>
+     <script>
+
+
+    function abrirPDF(cod) {
+        var win = window.open('abrirHojaVida.php', '_blank');
+        win.focus();
+    
+    }
+    </script>

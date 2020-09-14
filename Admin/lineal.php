@@ -46,20 +46,28 @@ while ($ver = $sentencia->fetch()) {
 			x: datosX,
 			y: datosY,
 			type: 'scatter',
+			textposition: 'auto',
 			line: {
-				color: 'red',
-				width: 2
+				color: 'rgb(8,48,107)',
+				width: 1.5
 			},
 			marker: {
-				color: 'red',
-				size: 12
+				color: 'rgb(158,202,225)',
+				sixe: 12
 			}
 
 		}
+		var layout = {
+		font: {
+			family: 'Raleway, sans-serif'
+		},
+
+		bargap: 0.05
+	};
 
 
 	
 		var data = [trace1];
 
-		Plotly.newPlot('graficaLineal', data);
+		Plotly.newPlot('graficaLineal', data, layout);
 	</script>
