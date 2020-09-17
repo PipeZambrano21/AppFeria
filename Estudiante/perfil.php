@@ -79,7 +79,7 @@ include('Header.php');
                                     </div>
 
                                     <div class="form-group mb-4">
-                                        <label for="userName">Cedula</label>
+                                        <label for="userName">Cédula</label>
                                         <input type="text" class="form-control" id="cedula" name="cedula"
                                             value="<?php echo ($estudiante->getCedEstudiante())?>">
                                     </div>
